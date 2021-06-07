@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Player
@@ -7,13 +8,13 @@ namespace Assets.Scripts.Player
         public CharacterController Controller;
         public Transform Camera;
         public float Speed = 6f;
-        public float TurnSmoothTime = 0.1f;
+        public float TurnSmoothTime = 0.05f;
         public bool ApplyGravity = true;
         public bool Movable = true;
-        
-        
+
         #region PrivateVariables
-        [field: SerializeField] private float Gravity { get; } = -55f;
+
+        private float Gravity { get; } = -40f;
         private float _turnSmoothVelocity;
         private float _horizontal;
         private float _vertical;
@@ -21,10 +22,19 @@ namespace Assets.Scripts.Player
         private Vector3 _moveDirection;
         private float _targetAngle;
         private float _angle;
-        private Vector3 _moveVector;
+        private Vector3 _gravityVector;
+        private Vector3 _dashVector;
+        private float _currentDashTime = 0f;
+        [SerializeField]
+        private float _dashTime = .1f;
+        private bool isDashing;
         
         #endregion
 
+        void Start()
+        {
+            _currentDashTime = _dashTime;
+        }
         
         
         void Update()
@@ -32,11 +42,11 @@ namespace Assets.Scripts.Player
             GetInput();
             
             _direction = new Vector3(_horizontal, 0f, _vertical).normalized;
-
             if (_direction.magnitude >= 0.1f)
             {
                 MoveAndRotate();
             }
+            
             
             GravityApplication();
         }
@@ -45,9 +55,9 @@ namespace Assets.Scripts.Player
         {
             if (!ApplyGravity) return;
             
-            _moveVector.y += Gravity;
-            Controller.Move(_moveVector * Time.deltaTime);
-            _moveVector = Vector3.zero;
+            _gravityVector.y += Gravity;
+            Controller.Move(_gravityVector * Time.deltaTime);
+            _gravityVector = Vector3.zero;
         }
 
         private void MoveAndRotate()
@@ -66,6 +76,34 @@ namespace Assets.Scripts.Player
         {
             _horizontal = Input.GetAxisRaw("Horizontal");
             _vertical = Input.GetAxisRaw("Vertical");
+            DashInput();
+        }
+
+        private void DashInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _currentDashTime = 0.0f;
+                isDashing = true;
+                Movable = false;
+            }
+
+            if (_currentDashTime < _dashTime)
+            {
+                _dashVector = transform.rotation * Vector3.forward * Speed * (Speed/2);
+                _currentDashTime += 0.1f;
+            }
+            else
+            {
+                _dashVector = Vector3.zero;
+                isDashing = false;
+                Movable = true;
+            }
+
+            if (isDashing)
+            {
+                Controller.Move( _dashVector * Time.deltaTime);
+            }
         }
     }
 }

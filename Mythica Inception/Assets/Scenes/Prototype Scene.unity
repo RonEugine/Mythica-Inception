@@ -170,9 +170,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: {fileID: 31618300}
   Camera: {fileID: 1687258585}
-  Speed: 30
+  Speed: 25
   TurnSmoothTime: 0.1
   ApplyGravity: 1
+  Movable: 1
+  _dashTime: 1
 --- !u!143 &31618300
 CharacterController:
   m_ObjectHideFlags: 0
