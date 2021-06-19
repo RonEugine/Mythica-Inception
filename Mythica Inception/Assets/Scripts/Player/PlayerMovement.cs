@@ -11,6 +11,9 @@ namespace Assets.Scripts.Player
         public float TurnSmoothTime = 0.05f;
         public bool ApplyGravity = true;
         public bool Movable = true;
+        public float AttackRate = 0.01f;
+
+        
 
         #region PrivateVariables
 
@@ -26,8 +29,11 @@ namespace Assets.Scripts.Player
         private Vector3 _gravityVector;
         private Vector3 _dashVector = Vector3.zero;
         private float _currentDashTime = 0f;
-        private float _dashTime = 1.5f;
+        private float _dashTime = 1f;
         private bool _isDashing;
+        private bool _canAttack = true;
+        private Transform _target; 
+        private float _currentAttackTimer = 0f;
         
         #endregion
 
@@ -48,30 +54,35 @@ namespace Assets.Scripts.Player
             GravityApplication();
         }
 
-        private void PickObject()
+        private void FaceTarget()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!Input.GetMouseButtonDown(0)) return;
+            _currentAttackTimer = 0f;
+            RaycastHit hit;
+            Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
+            
+            //magnet to enemy
+            if (Physics.Raycast(ray, out hit, 100.0f))
             {
-                RaycastHit hit;
-                Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, 100.0f))
+                if (hit.transform.CompareTag("Enemy"))
                 {
-                    if (!hit.transform.CompareTag("Enemy")) return;
-                    
-                    TurnToObject(hit.transform);
+                    _target = hit.transform;
+                    Debug.Log("Attack facing at " + _target.name);
+                }
+                else
+                {
+                    Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+                    float rayLength;
+                
+                    if (groundPlane.Raycast(ray, out rayLength))
+                    {
+                        Vector3 pointToLook = ray.GetPoint(rayLength);
+                        Vector3 faceTo = new Vector3(pointToLook.x, transform.position.y, pointToLook.z);
+                        transform.LookAt(faceTo);
+                        Debug.Log("Attack facing at " + faceTo.ToString());
+                    }  
                 }
             }
-        }
-
-        private void TurnToObject(Transform target)
-        {
-            transform.LookAt(target);
-            //if melee ˅˅˅˅˅˅
-            _currentDashTime = 1f;
-            _isDashing = true;
-            Movable = false;
-            DashAction();
-            //if melee ^^^^^
         }
         private void GravityApplication()
         {
@@ -101,7 +112,21 @@ namespace Assets.Scripts.Player
 
         private void AttackAction()
         {
-            PickObject();
+            if (_currentAttackTimer > AttackRate)
+            {
+                _canAttack = true;
+            }
+            else
+            {
+                _currentAttackTimer += Time.deltaTime;
+                _canAttack = false;
+            }
+            if(!_canAttack) return;
+            
+            FaceTarget();
+            if (_target == null) return;
+            transform.LookAt(_target);
+            _target = null;
         }
 
         private void MoveAction()
@@ -109,10 +134,10 @@ namespace Assets.Scripts.Player
             _horizontal = Input.GetAxisRaw("Horizontal");
             _vertical = Input.GetAxisRaw("Vertical");
             _direction = new Vector3(_horizontal, 0f, _vertical).normalized;
-            if (_direction.magnitude >= 0.1f)
-            {
-                MoveAndRotate();
-            }
+            
+            if (!(_direction.magnitude >= 0.1f)) return;
+            
+            MoveAndRotate();
         }
 
         private void DashAction()
