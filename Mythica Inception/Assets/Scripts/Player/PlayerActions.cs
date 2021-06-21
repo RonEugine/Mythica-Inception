@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,7 +16,7 @@ namespace Assets.Scripts.Player
 
         
 
-        #region PrivateVariables
+        #region Hidden Variables
         
         private CharacterController _controller;
         private UnityAction _playerActions;
@@ -33,14 +34,16 @@ namespace Assets.Scripts.Player
         private float _dashTime = 1f;
         private bool _isDashing;
         private bool _canAttack = true;
-        private Transform _target; 
+        [HideInInspector] public Transform Target; 
         private float _currentAttackTimer = 0f;
+        private float _currentSmoothTime;
         
         #endregion
 
         void Awake()
         {
             _controller = GetComponent<CharacterController>();
+            _currentSmoothTime = TurnSmoothTime;
         }
         
         void Start()
@@ -119,10 +122,10 @@ namespace Assets.Scripts.Player
             if(!_canAttack) return;
             
             FaceTarget();
-            if (_target == null) return;
-            transform.LookAt(_target);
+            if (Target == null) return;
+            transform.LookAt(Target);
             transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, transform.eulerAngles.z);
-            _target = null;
+            Target = null;
         }
 
         private void MoveAndRotate()
@@ -131,7 +134,7 @@ namespace Assets.Scripts.Player
             
             _targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + Camera.transform.eulerAngles.y;
             _angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetAngle, ref _turnSmoothVelocity,
-                TurnSmoothTime);
+                _currentSmoothTime);
             transform.rotation = Quaternion.Euler(0f, _angle, 0f);
             _moveDirection = Quaternion.Euler(0f, _targetAngle, 0f) * Vector3.forward;
             _controller.Move(_moveDirection.normalized * Speed * Time.deltaTime);
@@ -140,20 +143,23 @@ namespace Assets.Scripts.Player
         private void FaceTarget()
         {
             if (!Input.GetMouseButtonDown(0)) return;
+
+            _currentSmoothTime *= 3;
             _currentAttackTimer = 0f;
             RaycastHit hit;
             Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
-            
-            //magnet to enemy
+
             if (Physics.Raycast(ray, out hit, 100.0f))
             {
+                //if you clicked an enemy
                 if (hit.transform.CompareTag("Enemy"))
                 {
-                    _target = hit.transform;
-                    Debug.Log("Attack facing at " + _target.name);
+                    Target = hit.transform;
+                    Debug.Log("Attack facing at " + Target.name);
                 }
                 else
                 {
+                    //if not, then face towards where you clicked
                     Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
                     float rayLength;
                 
@@ -166,8 +172,16 @@ namespace Assets.Scripts.Player
                     }  
                 }
             }
+
+            StartCoroutine("SmoothTimeDelay", 1.5f);
         }
 
+        IEnumerator SmoothTimeDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            _currentSmoothTime = TurnSmoothTime;
+        }
+        
         private void GravityApplication()
         {
             if (!ApplyGravity) return;
