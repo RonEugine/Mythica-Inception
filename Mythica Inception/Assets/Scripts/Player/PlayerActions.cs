@@ -121,6 +121,7 @@ namespace Assets.Scripts.Player
             FaceTarget();
             if (_target == null) return;
             transform.LookAt(_target);
+            transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, transform.eulerAngles.z);
             _target = null;
         }
 
