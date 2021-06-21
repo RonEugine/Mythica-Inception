@@ -1,4 +1,5 @@
-using Assets.Scripts.Pluggable_AI;
+using Assets.Scripts.Pluggable_AI.Scripts;
+using Assets.Scripts.Pluggable_AI.Scripts.General;
 using UnityEngine;
 
 namespace Assets.Scripts.Editor

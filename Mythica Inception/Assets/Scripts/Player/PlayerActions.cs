@@ -155,7 +155,7 @@ namespace Assets.Scripts.Player
                 if (hit.transform.CompareTag("Enemy"))
                 {
                     Target = hit.transform;
-                    Debug.Log("Attack facing at " + Target.name);
+                    //Debug.Log("Attack facing at " + Target.name);
                 }
                 else
                 {
@@ -168,7 +168,7 @@ namespace Assets.Scripts.Player
                         Vector3 pointToLook = ray.GetPoint(rayLength);
                         Vector3 faceTo = new Vector3(pointToLook.x, transform.position.y, pointToLook.z);
                         transform.LookAt(faceTo);
-                        Debug.Log("Attack facing at " + faceTo.ToString());
+                        //Debug.Log("Attack facing at " + faceTo.ToString());
                     }  
                 }
             }

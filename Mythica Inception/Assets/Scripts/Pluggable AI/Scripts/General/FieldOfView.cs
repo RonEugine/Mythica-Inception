@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Pluggable_AI
+namespace Assets.Scripts.Pluggable_AI.Scripts.General
 {
     public class FieldOfView : MonoBehaviour
     {

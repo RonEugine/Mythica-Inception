@@ -1,5 +1,16 @@
 {
   "dependencies": {
+    "com.domybest.mybox": {
+      "version": "https://github.com/Deadcows/MyBox.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.ai": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0"
+      },
+      "hash": "725b8fb2ca2f88e2998b7e4ad4d38373d6bf9a1f"
+    },
     "com.unity.cinemachine": {
       "version": "2.6.5",
       "depth": 0,
