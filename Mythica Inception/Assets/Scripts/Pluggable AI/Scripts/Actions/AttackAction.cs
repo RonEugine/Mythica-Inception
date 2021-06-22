@@ -17,13 +17,13 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.Actions
 
             if (!stateController.StateBoolVariable)
             {
-                stateController.StateTimeElapsed = stateController.AIStats.AttackRate;
+                stateController.StateTimeElapsed = stateController.AIStats.AttackDecisionEvery;
                 stateController.StateBoolVariable = true;
             }
 
             if (fieldOfView.VisibleTargets.Count > 0)
             {
-                if (stateController.HasTimeElapsed(stateController.AIStats.AttackRate))
+                if (stateController.HasTimeElapsed(stateController.AIStats.AttackDecisionEvery))
                 {
                     //attack here
                     Debug.Log("Attacking " + stateController.Target.name + ".");

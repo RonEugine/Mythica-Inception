@@ -13,7 +13,9 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.Actions
 
         private void Patrol(StateController stateController)
         {
-            stateController.Agent.destination = stateController.Waypoints[stateController.NextWaypoint].position;
+            Vector3 nextDestination = stateController.Waypoints[stateController.NextWaypoint].position;
+            stateController.Agent.destination = nextDestination;
+            stateController.Destination = nextDestination;
             stateController.Agent.isStopped = false; //stateController.Agent.Resume() is obsolete
             if (stateController.Agent.remainingDistance <= stateController.Agent.stoppingDistance &&
                 !stateController.Agent.pathPending)

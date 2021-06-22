@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e57a45008170eaa4dbb1466d92faa93b, type: 3}
   m_Name: Sample AI Stat
   m_EditorClassIdentifier: 
-  WalkSpeed: 1.5
-  RunSpeed: 3
-  AttackRate: 1.5
-  Damage: 35
-  SearchDuration: 3
-  SearchingTurnSpeed: 200
+  AttackDecisionEvery: 1
+  SearchDuration: 4
+  SearchingTurnSpeed: 150
+  FleeDuration: 5

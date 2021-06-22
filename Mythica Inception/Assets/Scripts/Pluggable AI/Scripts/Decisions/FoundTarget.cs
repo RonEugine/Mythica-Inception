@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Pluggable_AI.Scripts.Decisions
 {
-    [CreateAssetMenu(menuName = "Pluggable AI/Decisions/FoundTargets")]
+    [CreateAssetMenu(menuName = "Pluggable AI/Decisions/Found Targets")]
     public class FoundTarget : Decision
     {
         public override bool Decide(StateController stateController)

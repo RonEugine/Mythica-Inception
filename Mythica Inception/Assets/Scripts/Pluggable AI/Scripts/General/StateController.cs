@@ -18,6 +18,7 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.General
         [HideInInspector] public int NextWaypoint;
         [HideInInspector] public Transform Target;
         [HideInInspector] public Vector3 LastKnownTargetPosition;
+        [HideInInspector] public Vector3 Destination;
         [HideInInspector] public bool StateBoolVariable;
         [HideInInspector] public float StateTimeElapsed;
 
@@ -31,7 +32,7 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.General
         void Update()
         {
             if(!_isActive) return;
-            
+
             CurrentState.UpdateState(this);
         }
         
@@ -49,6 +50,7 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.General
             
             CurrentState = nextState;
             OnExitState();
+
         }
 
         public bool HasTimeElapsed(float duration)
@@ -83,6 +85,7 @@ namespace Assets.Scripts.Pluggable_AI.Scripts.General
                 Eyes = transform.Find("Eyes");
             }
             Gizmos.DrawWireSphere(Eyes.position, 1.5f);
+            Gizmos.DrawWireSphere(Destination, 1.5f);
         }
         
     }

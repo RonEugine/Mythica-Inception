@@ -613,6 +613,7 @@ MonoBehaviour:
   NextWaypoint: 0
   Target: {fileID: 0}
   LastKnownTargetPosition: {x: 0, y: 0, z: 0}
+  Destination: {x: 0, y: 0, z: 0}
   StateBoolVariable: 0
   StateTimeElapsed: 0
 --- !u!195 &794089814
@@ -660,9 +661,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 794089810}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 585740a0ca74f58488a81ced48c5da07, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c15ed5894594754db62b6fdfd2f4295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TookHit: 0
 --- !u!114 &794089817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725edb386e421a64cb6d670f2235a850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ViewRadius: 30.9
+  ViewRadius: 60
   ViewAngle: 90
   ReactionTime: 0.01
   targetLayer:
@@ -1638,7 +1640,7 @@ GameObject:
   - component: {fileID: 1872290824}
   - component: {fileID: 1872290823}
   - component: {fileID: 1872290822}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
